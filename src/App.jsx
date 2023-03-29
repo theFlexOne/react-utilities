@@ -1,3 +1,5 @@
+import CheckBoxGroup from "./components/Form/CheckBoxGroup";
+import CheckBoxInput from "./components/Form/CheckBoxInput";
 import { Form } from "./components/Form/Form";
 import RadioGroup from "./components/Form/RadioGroup";
 import RadioInput from "./components/Form/RadioInput";
@@ -31,7 +33,7 @@ function App() {
   };
 
   return (
-    <div className="h-screen grid items-center text-center max-w-2xl mx-auto">
+    <div className="h-screen flex flex-col items-center justify-center gap-4 max-w-2xl mx-auto">
       <h2 className="text-2xl">React Components</h2>
       <Form validation={validation} onSubmit={handleSubmit}>
         <TextField
@@ -55,6 +57,13 @@ function App() {
           />
           <RadioInput label="option 2" value="opt2" name="radio" />
         </RadioGroup>
+        <CheckBoxGroup>
+          <CheckBoxInput label="option 1" name="checkbox1" />
+          <CheckBoxInput label="option 2" name="checkbox2" />
+        </CheckBoxGroup>
+        <button className="px-4 py-2 mt-2 rounded bg-sky-600 text-xl border active:scale-95 hover:brightness-105 active:brightness-90 shadow-sm">
+          Submit
+        </button>
       </Form>
     </div>
   );

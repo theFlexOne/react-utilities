@@ -1,12 +1,12 @@
 import FormField from "./FormField";
 
-const RadioGroup = ({ children, label }) => {
+const CheckBoxGroup = ({ children, label }) => {
   return (
     <div className="flex items-center gap-6">
       <p>{label || ""}</p>
-      {children}
+      <FormField>{children}</FormField>
     </div>
   );
 };
 
-export default RadioGroup;
+export default CheckBoxGroup;

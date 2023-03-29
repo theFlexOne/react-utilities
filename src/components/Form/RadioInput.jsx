@@ -7,7 +7,7 @@ const validateRadioInputType = (type) => {
   return validTypes.includes(type);
 };
 
-const RadioInput = ({ value, name, id, label, checked = false, ...props }) => {
+const RadioInput = ({ name, value, id, label, checked = false, ...props }) => {
   id ||= crypto.randomUUID();
   const [isChecked, setIsChecked] = useState(checked);
 

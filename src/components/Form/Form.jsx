@@ -1,49 +1,50 @@
-import { createContext, useContext, useRef } from "react";
+import { createContext, forwardRef, useContext, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 const styles =
-  "shadow-md rounded-md p-4 flex flex-col gap-4 max-w-xl items-center";
+  "rounded-md p-4 flex flex-col gap-4 max-w-xl items-center bg-[rgba(200,200,200,0.1)]";
 
 const FormContext = createContext();
 
-export const Form = ({
-  children,
-  onSubmit,
-  validation,
-  className = "",
-  ...props
-}) => {
-  const formDataRef = useRef({});
-  const classes = twMerge(styles, className);
+export const Form = forwardRef(
+  ({ children, onSubmit, validation, className = "", ...props }, ref) => {
+    const formDataRef = useRef({});
+    const classes = twMerge(styles, className);
 
-  const registerInput = (name) => {
-    return {
-      updateFormDataRef: (value) => {
-        formDataRef.current[name] = value;
-      },
-      validateInput: (value) => {
-        const error = validation[name](value);
-        return error;
-      },
+    // should I be memoizing this?
+    // I'm not sure if it's necessary
+    const registerInput = (name, initialState) => {
+      formDataRef.current[name] = initialState;
+      return {
+        updateFormDataRef: (callback) => {
+          if (typeof callback === "function") {
+            return (formDataRef.current[name] = callback(
+              // I think the value of the argument passed to the callback
+              // is wrong because it is inside a closure.
+              formDataRef.current[name]
+            ));
+          }
+          return (formDataRef.current[name] = callback);
+        },
+        validateInput: (value) => validation[name](value),
+      };
     };
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formDataRef.current);
-  };
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      onSubmit(formDataRef.current);
+    };
 
-  return (
-    <FormContext.Provider value={registerInput}>
-      <form onSubmit={handleSubmit} className={classes} {...props}>
-        {children}
-        <button type="submit">Submit</button>
-      </form>
-    </FormContext.Provider>
-  );
-};
+    return (
+      <FormContext.Provider value={registerInput}>
+        <form ref={ref} onSubmit={handleSubmit} className={classes} {...props}>
+          {children}
+        </form>
+      </FormContext.Provider>
+    );
+  }
+);
 
-export const useForm = (name) => {
-  const registerInput = useContext(FormContext);
-  return registerInput(name);
+export const useForm = (name, initialState) => {
+  return useContext(FormContext)(name, initialState);
 };
