@@ -1,9 +1,15 @@
+import { useState } from "react";
+import useEventListener from "./useEventListener";
+
 const useOutsideClick = (ref, callback) => {
-  const handleClick = (e) => {
-    if (ref.current && !ref.current.contains(e.target)) {
-      callback();
-    }
-  };
+  useEventListener(
+    "click",
+    (event) => {
+      if (ref.current == null || ref.current.contains(event.target)) return;
+      callback(event);
+    },
+    document
+  );
 
   return;
 };

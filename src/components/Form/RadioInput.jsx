@@ -7,32 +7,34 @@ const validateRadioInputType = (type) => {
   return validTypes.includes(type);
 };
 
-const RadioInput = ({ name, value, id, label, checked = false, ...props }) => {
-  id ||= crypto.randomUUID();
-  const [isChecked, setIsChecked] = useState(checked);
+const RadioInput = forwardRef(
+  ({ name, value, id, label, checked = false, ...props }, ref) => {
+    id ||= crypto.randomUUID();
+    const [isChecked, setIsChecked] = useState(checked);
 
-  const { updateFormDataRef } = useForm(name);
+    const { updateFormDataRef } = useForm(name);
 
-  const handleChange = (e) => {
-    const radioValue = e.target.value;
-    setIsChecked((prev) => !prev);
-    updateFormDataRef(radioValue);
-  };
+    const handleChange = (e) => {
+      const radioValue = e.target.value;
+      setIsChecked((prev) => !prev);
+      updateFormDataRef(radioValue);
+    };
 
-  return (
-    <div className="flex gap-2">
-      {label ? <label htmlFor={id}>{label}</label> : null}
-      <input
-        name={name}
-        type="radio"
-        id={id}
-        value={value}
-        checked={isChecked}
-        onChange={handleChange}
-        {...props}
-      />
-    </div>
-  );
-};
+    return (
+      <div className="flex gap-2">
+        {label ? <label htmlFor={id}>{label}</label> : null}
+        <input
+          name={name}
+          type="radio"
+          id={id}
+          value={value}
+          checked={isChecked}
+          onChange={handleChange}
+          {...props}
+        />
+      </div>
+    );
+  }
+);
 
 export default RadioInput;

@@ -1,9 +1,11 @@
+import { useRef, useState } from "react";
 import CheckBoxGroup from "./components/Form/CheckBoxGroup";
 import CheckBoxInput from "./components/Form/CheckBoxInput";
 import { Form } from "./components/Form/Form";
 import RadioGroup from "./components/Form/RadioGroup";
 import RadioInput from "./components/Form/RadioInput";
 import TextField from "./components/Form/TextField";
+import Modal from "./components/Modal/Modal";
 
 const validation = {
   firstName: (value) => {
@@ -19,8 +21,11 @@ const validation = {
     return false;
   },
   password: (value) => {
-    const regex = new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$");
-    if (!value.match(regex)) {
+    if (
+      !value.match(/\d+/g) ||
+      !value.match(/[a-zA-Z]+/g) ||
+      value.length < 8
+    ) {
       return "Password must be at least 8 characters long and contain at least one letter and one number";
     }
     return false;
@@ -28,9 +33,15 @@ const validation = {
 };
 
 function App() {
+  const [isOpen, setIsOpen] = useState(false);
+
   const handleSubmit = (formData = {}) => {
     console.log(formData);
   };
+
+  const openModal = () => setIsOpen(true);
+
+  const closeModal = () => setIsOpen(false);
 
   return (
     <div className="h-screen flex flex-col items-center justify-center gap-4 max-w-2xl mx-auto">
@@ -65,6 +76,23 @@ function App() {
           Submit
         </button>
       </Form>
+      <button
+        onClick={openModal}
+        className="px-4 py-2 rounded bg-sky-600 text-xl border active:scale-95 hover:brightness-105 active:brightness-90 shadow-sm"
+      >
+        Open Modal
+      </button>
+      {isOpen && (
+        <Modal>
+          <h2 className="text-2xl">Modal</h2>
+          <button
+            onClick={closeModal}
+            className="px-4 py-2 mt-2 rounded bg-sky-600 text-xl border active:scale-95 hover:brightness-105 active:brightness-90 shadow-sm"
+          >
+            Close Modal
+          </button>
+        </Modal>
+      )}
     </div>
   );
 }

@@ -11,16 +11,12 @@ export const Form = forwardRef(
     const formDataRef = useRef({});
     const classes = twMerge(styles, className);
 
-    // should I be memoizing this?
-    // I'm not sure if it's necessary
     const registerInput = (name, initialState) => {
       formDataRef.current[name] = initialState;
       return {
         updateFormDataRef: (callback) => {
           if (typeof callback === "function") {
             return (formDataRef.current[name] = callback(
-              // I think the value of the argument passed to the callback
-              // is wrong because it is inside a closure.
               formDataRef.current[name]
             ));
           }
